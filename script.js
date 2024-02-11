@@ -31,7 +31,7 @@ function playRound(playerSelection, computerSelection){
     } else if ((playerSelection === "ROCK" && computerSelection === "SCISSORS")||(playerSelection==="PAPER" && computerSelection==="ROCK")||(playerSelection==="SCISSORS" && computerSelection==="PAPER")){
         roundResult =`You won!! ${playerSelection} beats ${computerSelection}.`;
     } else if ((playerSelection === "ROCK" && computerSelection === "PAPER")||(playerSelection==="PAPER" && computerSelection==="SCISSORS")||(playerSelection==="SCISSORS" && computerSelection==="ROCK")){
-        roundResult =`You lost!! ${computerSelection} beats ${playerSelection}`;
+        roundResult =`You lost!! ${computerSelection} beats ${playerSelection}.`;
     } else{
         roundResult ="Invalid input.";
     }
@@ -97,9 +97,9 @@ function showFinalResult() {
     if (playerPoint == 5 || computerPoint == 5){
         let result;
         if (playerPoint>computerPoint) {
-            result = `You won!! you scored ${playerPoint} Points and computer scored ${computerPoint} Points.`;
+            result = `You won!! by ${playerPoint-computerPoint} Points.`;
         } else if (playerPoint<computerPoint){
-            result = `You lost!! computer scored ${computerPoint} Points and you scored ${playerPoint} Points.`;
+            result = `You lost!! by ${computerPoint-playerPoint} Points.`;
         } else {
             result = `Its a Tie you both scored ${playerPoint} Points.`;
         }
@@ -111,6 +111,7 @@ function showFinalResult() {
         let repalyBtn = document.createElement('button');
         repalyBtn.addEventListener('click', () => location.reload())
         repalyBtn.textContent = "REPLAY";
+        repalyBtn.setAttribute("class", "btn")
         document.body.appendChild(repalyBtn);
     }
 }
