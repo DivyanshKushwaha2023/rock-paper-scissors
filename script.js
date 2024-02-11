@@ -1,13 +1,4 @@
-//Get player's choice and store it in playerSelection variable
-
-function getPlayerChoice(){
-    return prompt("Your choice?", "").toUpperCase();
-}
-
-
-//Write a function getComputerChoice() to get computer's choice and store it in computerSelection variable
-
-
+//function to get computer's choice
 
 function getComputerChoice () {
     const randomNum = Math.floor(Math.random() * 3);
@@ -21,52 +12,114 @@ function getComputerChoice () {
 };
 
 
+//function to show computer's choice on the screen
+
+let computerChoice = document.querySelector('#computerchoice')
+function showComputerChoice(){
+    computerChoice.textContent = `Computer selected ${computerSelection}`;
+}
 
 
-//Write a function playRound() which plays single round of rock-paper-scissors that takes two parameters playerSelection and computerSelection and returns winner of the round with some string
+//function that give result of one round of play
+
+let resultOfOneRound = document.querySelector('#roundresult')
+let roundResult;
 
 function playRound(playerSelection, computerSelection){
     if (playerSelection === computerSelection){
-        return "TIE";
+        roundResult = "TIE";
     } else if ((playerSelection === "ROCK" && computerSelection === "SCISSORS")||(playerSelection==="PAPER" && computerSelection==="ROCK")||(playerSelection==="SCISSORS" && computerSelection==="PAPER")){
-        return `You won!! ${playerSelection} beats ${computerSelection}.`
+        roundResult =`You won!! ${playerSelection} beats ${computerSelection}.`;
     } else if ((playerSelection === "ROCK" && computerSelection === "PAPER")||(playerSelection==="PAPER" && computerSelection==="SCISSORS")||(playerSelection==="SCISSORS" && computerSelection==="ROCK")){
-        return `You lost!! ${computerSelection} beats ${playerSelection}`
+        roundResult =`You lost!! ${computerSelection} beats ${playerSelection}`;
     } else{
-        return "Invalid input."
+        roundResult ="Invalid input.";
     }
+    resultOfOneRound.textContent = roundResult;
+    return roundResult;
 }
 
 
-//Write a function game() using previous function that plays 5 rounds and displays the results with some strigs
 
-function game() {
-    let playerPoint = 0;
-    let computerPoint = 0;
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = getPlayerChoice();
-        let computerSelection = getComputerChoice();     
-        playRound(playerSelection, computerSelection);
-        let roundResult = playRound(playerSelection, computerSelection);
-       
-        console.log(`Computer selected ${computerSelection}`);
-        console.log(playRound(playerSelection, computerSelection));
-       
-        if (roundResult.substring(0,7) ==="You won" ) {
-            playerPoint += 1;
-        } else if (roundResult.substring(0,7) === "You los") {
-            computerPoint += 1;
+let rockBtn = document.querySelector('#rock');
+let paperBtn = document.querySelector('#paper');
+let scissorsBtn = document.querySelector('#scissors');
+  
+rockBtn.addEventListener('click', () =>{
+    computerSelection = getComputerChoice(); 
+    playRound("ROCK",computerSelection);
+    getPoint();
+    showComputerChoice();
+    showFinalResult();
+});
+
+paperBtn.addEventListener('click', () =>{
+    computerSelection = getComputerChoice(); 
+    playRound("PAPER",computerSelection);
+    getPoint();
+    showComputerChoice();
+    showFinalResult();
+});
+
+scissorsBtn.addEventListener('click', () =>{
+    computerSelection = getComputerChoice(); 
+    playRound("SCISSORS",computerSelection);
+    getPoint();
+    showComputerChoice();
+    showFinalResult();
+});
+
+
+
+//function to get points of the player and the computer and show the result on the screen
+
+let computerScore = document.querySelector('#computerscore');
+let playerScore = document.querySelector('#playerscore');
+let playerPoint = 0;
+let computerPoint = 0;
+function getPoint(){
+    const winRegex = /You won/g;
+    const loseRegex = /You lost/g;
+    if (winRegex.test(roundResult)) {
+        playerPoint += 1;
+    } else if (loseRegex.test(roundResult)) {
+        computerPoint += 1;
+    }    
+    playerScore.textContent = `Your Score ${playerPoint}`
+
+    computerScore.textContent = `Computer's Score ${computerPoint}`
+}
+
+
+//function that gives final result untill either the player or the computer gets to 5 points
+
+function showFinalResult() {
+    if (playerPoint == 5 || computerPoint == 5){
+        let result;
+        if (playerPoint>computerPoint) {
+            result = `You won!! you scored ${playerPoint} Points and computer scored ${computerPoint} Points.`;
+        } else if (playerPoint<computerPoint){
+            result = `You lost!! computer scored ${computerPoint} Points and you scored ${playerPoint} Points.`;
+        } else {
+            result = `Its a Tie you both scored ${playerPoint} Points.`;
         }
-       
-        console.log(`Your Score- ${playerPoint} and Computer's Score- ${computerPoint}`);
-    }
-    if (playerPoint>computerPoint) {
-       return console.log(`You won!! you scored ${playerPoint} Points and computer scored ${computerPoint} Points.`);
-    } else if (playerPoint<computerPoint){
-       return console.log(`You lost!! computer scored ${computerPoint} Points and you scored ${playerPoint} Points.`)
-    } else {
-        return console.log(`Its a Tie you both scored ${playerPoint} Points.`)
+        let finalResult = document.querySelector('#finalresult');
+        finalResult.textContent = result;
+        
+        hideElement(rockBtn,paperBtn,scissorsBtn,computerChoice,resultOfOneRound,computerScore,playerScore)
+
+        let repalyBtn = document.createElement('button');
+        repalyBtn.addEventListener('click', () => location.reload())
+        repalyBtn.textContent = "REPLAY";
+        document.body.appendChild(repalyBtn);
     }
 }
 
-game();
+
+//funtion to hide elements for the final sresult screen
+
+function hideElement(...elements) {
+    elements.forEach(element => {
+        element.setAttribute('hidden', '')        
+    });
+}
